@@ -19,6 +19,18 @@ export class ProductsController {
     this.productsService = productsService;
   }
 
+  @Get('/extended')
+  getAllExt(): any {
+    return this.productsService.getAllExt();
+  }
+
+  @Get('/extended/:id')
+  async getAllExtById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const prod = await this.productsService.getAllExtById(id);
+    if (!prod) throw new NotFoundException('Product not found');
+    return prod;
+  }
+
   @Get('/')
   getAll(): any {
     return this.productsService.getAll();
@@ -40,7 +52,7 @@ export class ProductsController {
   }
 
   @Post('/')
-  create(@Body() productData: CreateProductDTO) {
+  async create(@Body() productData: CreateProductDTO) {
     return this.productsService.create(productData);
   }
 

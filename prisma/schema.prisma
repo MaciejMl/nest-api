@@ -10,6 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Client {
+  id String @id @default(uuid())
+  name String
+  address String
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  orders Order[]
+}
+
 model Product {
   id String @id @default(uuid())
   name String
@@ -18,13 +28,16 @@ model Product {
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+  orders Order[]
 }
 
 model Order {
   id String @id @default(uuid())
-  productId String
-  client String
-  address String
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId String?
+  client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientId String?
+  
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
